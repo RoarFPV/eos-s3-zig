@@ -1,0 +1,27 @@
+mach create "eos-s3"
+
+machine LoadPlatformDescription @platforms/boards/eos-s3-quickfeather.repl
+
+using sysbus
+
+
+$bin ?= @zig-out/bin/firmware.elf
+
+macro reset
+"""
+    logLevel 0
+    sysbus.cpu VectorTableOffset 0x08000000
+    sysbus.cpu ExecutionMode SingleStepBlocking
+    #sysbus LogPeripheralAccess rcc true
+    #sysbus.cpu LogFunctionNames true
+    
+    sysbus LoadELF $bin
+"""
+
+machine StartGdbServer 3333
+
+
+runMacro $reset
+
+
+showAnalyzer uart
