@@ -1,21 +1,19 @@
 const std = @import("std");
 const microzig = @import("microzig");
 const regs = microzig.chip.peripherals;
+const cm4 = microzig.cpu.peripherals;
 
-pub const pads = @import("hal/pads.zig");
-
-// copied from: qorc-sdk\BSP\quickfeather\src\qf_baremetalsetupregs.CRU.C
+pub const uart = @import("hal/uart.zig");
+// copied from: qorc-sdk\BSP\quickfeather\src\qf_baremetalsetup.c
 pub fn init() void {
-    // regs.SCB_ACTRL
-    //     .
-
-    // .modify(.{ .DISDEFWBUF = 1 });
-
     regs.SCB_ACTRL.ACTRL.modify(.{ .DISDEFWBUF = 1 });
 
+    const clk_div = (72_000_000 / 32768) - 3;
     // Initialize AIP registers (HSOSC)
-    regs.AIP.OSC_CTRL_1.modify(.{ .prog = 2194 }); // (72,000,000/32,768) - 3
+    regs.AIP.OSC_CTRL_1.modify(.{ .prog = clk_div }); // (72,000,000/32,768) - 3
 
+    //const lastV = regs.AIP.OSC_CTRL_1.read();
+    //std.debug.assert(lastV.prog == clk_div);
     // Initialize power registers
     regs.PMU.FB_STATUS.modify(.{ .FB_Active = 1 });
 
@@ -64,6 +62,8 @@ pub fn init() void {
     //     SCB->CPACR |= ((3UL << 10*2)|(3UL << 11*2));  /* set CP10 and CP11 Full Access */
     // #endif
 
+    cm4.SCB.CPACR |= ((3 << 10 * 2) | (3 << 11 * 2));
+
     regs.INTR_CTRL.OTHER_INTR.write_raw(0xffffff);
 
     regs.DMA.DMA_CTRL.modify(.{
@@ -75,4 +75,8 @@ pub fn init() void {
     regs.AIP.LDO_50_CTRL_0.write_raw(0x1ac); // LDO Enable
     regs.AIP.LDO_30_CTRL_0.write_raw(0x28c); // LDO Enable       /* 0x28c -> Vo =1.15V, imax = 7.2mA, LDO enabled. */
     regs.AIP.LDO_50_CTRL_0.write_raw(0x28c); // LDO Enable
+
+    cm4.SysTick.LOAD.modify(.{ .RELOAD = 72_0 });
+    cm4.SysTick.VAL.modify(.{ .CURRENT = 0 });
+    cm4.SysTick.CTRL.modify(.{ .CLKSOURCE = 1, .ENABLE = 1 });
 }

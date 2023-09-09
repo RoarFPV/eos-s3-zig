@@ -27,6 +27,7 @@
           "enabled": true,
           "samplesPerSecond": 4
         },
+        "serverArgs": ["-d"],
         // Work around for stopping at main on restart
         "preLaunchTask": "Build Firmware",
         "postRestartCommands": [

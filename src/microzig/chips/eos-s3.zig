@@ -159,7 +159,7 @@ pub const types = struct {
         ///  IO Multiplexing Control
         pub const IOMUX = extern struct {
             ///  PAD_%s control register
-            PAD_CTRL: [35]mmio.Mmio(packed struct(u32) {
+            pub const PAD_CTRL_Type = packed struct(u32) {
                 ///  Functional selection for IO output. Refer to IO Mux
                 FUNC_SEL: packed union {
                     raw: u2,
@@ -257,105 +257,107 @@ pub const types = struct {
                     },
                 },
                 padding: u19,
-            }),
+            };
+
+            PAD_CTRL: [46]mmio.Mmio(PAD_CTRL_Type),
             ///  PAD_%s control register(ffe exclusive)
-            PAD__CTRL_FFE: [11]mmio.Mmio(packed struct(u32) {
-                ///  Functional selection for IO output. Refer to IO Mux
-                FUNC_SEL: packed union {
-                    raw: u2,
-                    value: enum(u2) {
-                        ///  Select alternative function 0
-                        alternative_0 = 0x0,
-                        ///  Select alternative function 1
-                        alternative_1 = 0x1,
-                        ///  Select alternative function 2
-                        alternative_2 = 0x2,
-                        ///  Select alternative function 3
-                        alternative_3 = 0x3,
-                    },
-                },
-                reserved3: u1,
-                ///  Control selection for IO Output. 0x0 = A0 registers, 0x1 = Others, 0x2 = Fabric. * Exception - when FUNC_SEL=2, the control is from FFE
-                CTRL_SEL: packed union {
-                    raw: u2,
-                    value: enum(u2) {
-                        ///  A0 registers
-                        a0_registers = 0x0,
-                        ///  Others
-                        others = 0x1,
-                        _,
-                    },
-                },
-                ///  Active low output enable
-                OEN: packed union {
-                    raw: u1,
-                    value: enum(u1) {
-                        ///  normal operation
-                        normal_operation = 0x0,
-                        ///  driver disabled
-                        driver_disabled = 0x1,
-                    },
-                },
-                ///  Driver state control
-                P: packed union {
-                    raw: u2,
-                    value: enum(u2) {
-                        ///  floating, high impedance
-                        z = 0x0,
-                        ///  pull-up mode
-                        pull_up = 0x1,
-                        ///  pull-down mode
-                        pull_down = 0x2,
-                        ///  bus keeper mode
-                        keeper = 0x3,
-                    },
-                },
-                ///  Driver Strenght
-                E: packed union {
-                    raw: u2,
-                    value: enum(u2) {
-                        ///  Configures the drive current at 2mA
-                        current_2ma = 0x0,
-                        ///  Configures the drive current at 4mA
-                        current_4ma = 0x1,
-                        ///  Configures the drive current at 8mA
-                        current_8ma = 0x2,
-                        ///  Configures the drive current at 12mA
-                        current_12ma = 0x3,
-                    },
-                },
-                ///  Slew Rate
-                SR: packed union {
-                    raw: u1,
-                    value: enum(u1) {
-                        ///  slow (half frequency) slew rate
-                        slow = 0x0,
-                        ///  fast slew rate
-                        fast = 0x1,
-                    },
-                },
-                ///  Receive Enable
-                REN: packed union {
-                    raw: u1,
-                    value: enum(u1) {
-                        ///  disable receive
-                        disable_receive = 0x0,
-                        ///  enable receive
-                        enable_receive = 0x1,
-                    },
-                },
-                ///  Schmitt Trigger
-                SMT: packed union {
-                    raw: u1,
-                    value: enum(u1) {
-                        ///  Disable the Schmitt trigger
-                        disable_trigger = 0x0,
-                        ///  Enable the Schmitt trigger
-                        enable_trigger = 0x1,
-                    },
-                },
-                padding: u19,
-            }),
+            // PAD__CTRL_FFE: [11]mmio.Mmio(packed struct(u32) {
+            //     ///  Functional selection for IO output. Refer to IO Mux
+            //     FUNC_SEL: packed union {
+            //         raw: u2,
+            //         value: enum(u2) {
+            //             ///  Select alternative function 0
+            //             alternative_0 = 0x0,
+            //             ///  Select alternative function 1
+            //             alternative_1 = 0x1,
+            //             ///  Select alternative function 2
+            //             alternative_2 = 0x2,
+            //             ///  Select alternative function 3
+            //             alternative_3 = 0x3,
+            //         },
+            //     },
+            //     reserved3: u1,
+            //     ///  Control selection for IO Output. 0x0 = A0 registers, 0x1 = Others, 0x2 = Fabric. * Exception - when FUNC_SEL=2, the control is from FFE
+            //     CTRL_SEL: packed union {
+            //         raw: u2,
+            //         value: enum(u2) {
+            //             ///  A0 registers
+            //             a0_registers = 0x0,
+            //             ///  Others
+            //             others = 0x1,
+            //             _,
+            //         },
+            //     },
+            //     ///  Active low output enable
+            //     OEN: packed union {
+            //         raw: u1,
+            //         value: enum(u1) {
+            //             ///  normal operation
+            //             normal_operation = 0x0,
+            //             ///  driver disabled
+            //             driver_disabled = 0x1,
+            //         },
+            //     },
+            //     ///  Driver state control
+            //     P: packed union {
+            //         raw: u2,
+            //         value: enum(u2) {
+            //             ///  floating, high impedance
+            //             z = 0x0,
+            //             ///  pull-up mode
+            //             pull_up = 0x1,
+            //             ///  pull-down mode
+            //             pull_down = 0x2,
+            //             ///  bus keeper mode
+            //             keeper = 0x3,
+            //         },
+            //     },
+            //     ///  Driver Strenght
+            //     E: packed union {
+            //         raw: u2,
+            //         value: enum(u2) {
+            //             ///  Configures the drive current at 2mA
+            //             current_2ma = 0x0,
+            //             ///  Configures the drive current at 4mA
+            //             current_4ma = 0x1,
+            //             ///  Configures the drive current at 8mA
+            //             current_8ma = 0x2,
+            //             ///  Configures the drive current at 12mA
+            //             current_12ma = 0x3,
+            //         },
+            //     },
+            //     ///  Slew Rate
+            //     SR: packed union {
+            //         raw: u1,
+            //         value: enum(u1) {
+            //             ///  slow (half frequency) slew rate
+            //             slow = 0x0,
+            //             ///  fast slew rate
+            //             fast = 0x1,
+            //         },
+            //     },
+            //     ///  Receive Enable
+            //     REN: packed union {
+            //         raw: u1,
+            //         value: enum(u1) {
+            //             ///  disable receive
+            //             disable_receive = 0x0,
+            //             ///  enable receive
+            //             enable_receive = 0x1,
+            //         },
+            //     },
+            //     ///  Schmitt Trigger
+            //     SMT: packed union {
+            //         raw: u1,
+            //         value: enum(u1) {
+            //             ///  Disable the Schmitt trigger
+            //             disable_trigger = 0x0,
+            //             ///  Enable the Schmitt trigger
+            //             enable_trigger = 0x1,
+            //         },
+            //     },
+            //     padding: u19,
+            // }),
             reserved256: [72]u8,
             ///  Select pad for SDA function in I2C0 (only pad 1 is selectable)
             SDA0_SEL_REG: mmio.Mmio(packed struct(u32) {
@@ -11337,7 +11339,16 @@ pub const types = struct {
                 UART_ILPR: u8,
                 padding: u24,
             }),
-            reserved44: [8]u8,
+            ///  Integer Baud Rate Register 0x24
+            UART_IBRD: mmio.Mmio(packed struct(u32) {
+                ///  Integer Baud Rate Register 0x24
+                UART_IBRD: u32,
+            }),
+            ///  Fractional Baud Rate Register 0x28
+            UART_FBRD: mmio.Mmio(packed struct(u32) {
+                ///  Fractional Baud Rate Register 0x28
+                UART_FBRD: u32,
+            }),
             ///  UART Line Control Register. This register accesses bit 29 to 22 of the UART Line Control Register, UARTLCR.
             UART_LCR_H: mmio.Mmio(packed struct(u32) {
                 ///  Send break. If this bit is set to 1, a low-level is continually output on the UARTTXD output, after completing transmission of the current character. For the proper execution of the break command, the software must set this bit for at least two complete frames. For normal use, this bit must be cleared to 0.
@@ -11366,16 +11377,25 @@ pub const types = struct {
                 STP2: u1,
                 ///  Enable FIFOs:
                 FEN: packed union {
-                    raw: u2,
-                    value: enum(u2) {
+                    raw: u1,
+                    value: enum(u1) {
                         ///  FIFOs are disabled (character mode) that is, the FIFOs become 1-byte-deep holding registers
                         disable_fifos = 0x0,
                         ///  transmit and receive FIFO buffers are enabled (FIFO mode).
                         enable_fifos = 0x1,
-                        _,
                     },
                 },
-                reserved7: u1,
+
+                WLEN: packed union {
+                    raw: u2,
+                    value: enum(u2) {
+                        use_5_bit_word = 0x0,
+                        use_6_bit_word = 0x1,
+                        use_7_bit_word = 0x2,
+                        use_8_bit_word = 0x3,
+                    },
+                },
+
                 ///  Stick parity select. This bit has no effect when the PEN bit disables parity checking and generation. See Table 3-11 on page 3-14 for the parity truth table.
                 SPS: packed union {
                     raw: u1,
