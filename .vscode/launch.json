@@ -4,35 +4,38 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+ 
         
     {
-        "name": "Pico Probe SWD",
+        "name": "Tigard SWD",
         "cwd": "${workspaceRoot}",
         "executable": "${workspaceFolder}/zig-out/bin/firmware.elf",
         "request": "launch",
         "type": "cortex-debug",
         "servertype": "openocd",
+
         // This may need to be arm-none-eabi-gdb depending on your system
         //"gdbPath": "gdb-multiarch",
         "device": "EOS-S3",
         "configFiles": [
-          "interface/cmsis-dap.cfg",
+          "${workspaceFolder}/tools/openocd/tigard-swd.cfg",
           "target/eos_s3.cfg"
         ],
+        
         //"openOCDLaunchCommands": ["adapter speed 5000"],
         "searchDir": ["C:/code/pico-sdk-win/openocd/scripts"],
         "svdFile": "${workspaceFolder}/deps/svd/eos-s3.svd",
-        "runToEntryPoint": "main",
+        // "runToEntryPoint": "main",
         "liveWatch": {
-          "enabled": true,
+          "enabled": false,
           "samplesPerSecond": 4
         },
-        "serverArgs": ["-d"],
+        //"serverArgs": ["-d"],
         // Work around for stopping at main on restart
         "preLaunchTask": "Build Firmware",
         "postRestartCommands": [
-          "break main",
-          "continue"
+          // "break main",
+          // "continue"
         ]
       },
         

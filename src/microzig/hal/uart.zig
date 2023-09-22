@@ -68,14 +68,14 @@ pub fn init(comptime config: Config) void {
     const txPin = &peri.IOMUX.PAD_CTRL[44];
 
     txPin.write(.{
-        .FUNC_SEL = .{ .value = .alternative_3 }, // PAD44_FUNC_SEL_UART_TXD
-        .CTRL_SEL = .{ .value = .a0_registers },
-        .OEN = .{ .value = .normal_operation },
-        .P = .{ .value = .z },
-        .E = .{ .value = .current_4ma },
-        .SR = .{ .value = .slow },
-        .REN = .{ .value = .disable_receive },
-        .SMT = .{ .value = .disable_trigger },
+        .FUNC_SEL = .alternative_3, // PAD44_FUNC_SEL_UART_TXD
+        .CTRL_SEL = .a0_registers,
+        .OEN = .normal_operation,
+        .P = .z,
+        .E = .current_4ma,
+        .SR = .slow,
+        .REN = .disable_receive,
+        .SMT = .disable_trigger,
         .padding = 0,
         .reserved3 = 0,
     });
@@ -83,19 +83,19 @@ pub fn init(comptime config: Config) void {
     const rxPin = &peri.IOMUX.PAD_CTRL[45];
 
     rxPin.write(.{
-        .FUNC_SEL = .{ .value = .alternative_0 }, // PAD44_FUNC_SEL_UART_TXD
-        .CTRL_SEL = .{ .value = .a0_registers },
-        .OEN = .{ .value = .normal_operation },
-        .P = .{ .value = .z },
-        .E = .{ .value = .current_4ma },
-        .SR = .{ .value = .slow },
-        .REN = .{ .value = .enable_receive },
-        .SMT = .{ .value = .disable_trigger },
+        .FUNC_SEL = .alternative_0, // PAD44_FUNC_SEL_UART_TXD
+        .CTRL_SEL = .a0_registers,
+        .OEN = .normal_operation,
+        .P = .z,
+        .E = .current_4ma,
+        .SR = .slow,
+        .REN = .enable_receive,
+        .SMT = .disable_trigger,
         .padding = 0,
         .reserved3 = 0,
     });
 
-    peri.IOMUX.UART_rxd_SEL.modify(.{ .SEL = .{ .value = .pad_45 } });
+    peri.IOMUX.UART_rxd_SEL.modify(.{ .SEL = .pad_45 });
 
     //     { // setup UART TX
     //     .ucPin = PAD_44,
@@ -123,18 +123,18 @@ pub fn init(comptime config: Config) void {
     UART.UART_FBRD.write_raw(fbrd);
 
     UART.UART_LCR_H.modify(.{
-        .FEN = .{ .value = .enable_fifos },
-        .WLEN = .{ .value = .use_8_bit_word },
+        .FEN = .enable_fifos,
+        .WLEN = .use_8_bit_word,
     });
     //.enable_fifos } });
     UART.UART_IMSC.write_raw(0);
     UART.UART_IFLS.modify(.{
-        .TXIFLSEL = .{ .value = .one_half },
-        .RXIFLSEL = .{ .value = .one_eight },
+        .TXIFLSEL = .one_half,
+        .RXIFLSEL = .one_eight,
     });
 
     UART.UART_CR.modify(.{
-        .UARTEN = .{ .value = .uart_enable },
+        .UARTEN = .uart_enable,
         .TXE = 1,
         .RXE = 1,
         .RTSEn = 0,
@@ -148,14 +148,16 @@ pub fn init(comptime config: Config) void {
 pub fn write(context: u32, data: []const u8) WriteError!usize {
     _ = context;
     for (data) |byte| {
-        while (UART.UART_TFR.read().TXFF == 1) {}
+        var tfr = UART.UART_TFR.read();
+        while (tfr.TXFF == 1) {
+            tfr = UART.UART_TFR.read();
+        }
         UART.UART_DR.write(.{
             .DATA = byte,
             .FE = 0,
             .PE = 0,
             .BE = 0,
             .OE = 0,
-            .padding = 0,
         });
     }
     return data.len;

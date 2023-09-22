@@ -4,20 +4,21 @@ const regs = microzig.chip.peripherals;
 const cm4 = microzig.cpu.peripherals;
 
 pub const uart = @import("hal/uart.zig");
+
+pub const ClockHz = 72_000_000;
+pub const SysTicksPerSecond = 1_000_000;
+
 // copied from: qorc-sdk\BSP\quickfeather\src\qf_baremetalsetup.c
 pub fn init() void {
     regs.SCB_ACTRL.ACTRL.modify(.{ .DISDEFWBUF = 1 });
 
-    const clk_div = (72_000_000 / 32768) - 3;
     // Initialize AIP registers (HSOSC)
-    regs.AIP.OSC_CTRL_1.modify(.{ .prog = clk_div }); // (72,000,000/32,768) - 3
+    regs.AIP.OSC_CTRL_1.modify(.{ .prog = ClockHz / 32768 - 3 }); // (72,000,000/32,768) - 3
 
-    //const lastV = regs.AIP.OSC_CTRL_1.read();
-    //std.debug.assert(lastV.prog == clk_div);
     // Initialize power registers
     regs.PMU.FB_STATUS.modify(.{ .FB_Active = 1 });
 
-    regs.PMU.A1_PWR_MODE_CFG.modify(.{ .A1_Power_Mode_Cfg = .{ .value = .shut_down_mode } });
+    regs.PMU.A1_PWR_MODE_CFG.modify(.{ .A1_Power_Mode_Cfg = .shut_down_mode });
     regs.PMU.MISC_STATUS.modify(.{ .I2S = 1 });
     regs.PMU.AUDIO_STATUS.modify(.{
         .AD0 = 1,
@@ -56,19 +57,13 @@ pub fn init() void {
     regs.CRU.C31_CLK_DIV.write_raw(0x003);
     regs.CRU.CLK_DIVIDER_CLK_GATING.write_raw(0x33B);
 
-    // system_init()
-    // FPU settings ------------------------------------------------------------*/
-    // #if (__FPU_PRESENT == 1) && (__FPU_USED == 1)
-    //     SCB->CPACR |= ((3UL << 10*2)|(3UL << 11*2));  /* set CP10 and CP11 Full Access */
-    // #endif
-
+    // /* set CP10 and CP11 Full Access */
+    // SCB->CPACR |= ((3UL << 10*2)|(3UL << 11*2));
     cm4.SCB.CPACR |= ((3 << 10 * 2) | (3 << 11 * 2));
 
     regs.INTR_CTRL.OTHER_INTR.write_raw(0xffffff);
 
-    regs.DMA.DMA_CTRL.modify(.{
-        .dma_stop = 1,
-    });
+    regs.DMA.DMA_CTRL.modify(.{ .dma_stop = 1 });
 
     // /* LDO Settings */
     regs.AIP.LDO_30_CTRL_0.write_raw(0x1ac); // LDO Enable       /* 0x1ac -> Vo =1.01V, imax = 7.2mA, LDO enabled. */
@@ -76,7 +71,38 @@ pub fn init() void {
     regs.AIP.LDO_30_CTRL_0.write_raw(0x28c); // LDO Enable       /* 0x28c -> Vo =1.15V, imax = 7.2mA, LDO enabled. */
     regs.AIP.LDO_50_CTRL_0.write_raw(0x28c); // LDO Enable
 
-    cm4.SysTick.LOAD.modify(.{ .RELOAD = 72_0 });
+    cm4.SysTick.LOAD.modify(.{ .RELOAD = ClockHz / SysTicksPerSecond });
     cm4.SysTick.VAL.modify(.{ .CURRENT = 0 });
     cm4.SysTick.CTRL.modify(.{ .CLKSOURCE = 1, .ENABLE = 1 });
+}
+
+pub fn millisToSysTicks(ms: u32) u32 {
+    return ms * (SysTicksPerSecond / 1000);
+}
+
+pub fn sysTicksToMillis(ticks: u32) u32 {
+    return ticks / 1000;
+}
+
+pub fn spinForMillis(ms: u32) void {
+    spinForMicros(ms * 1000);
+}
+
+pub fn spinForMicros(us: u32) void {
+    var a = us;
+    // systick is micro seconds
+    while (a > 0) {
+
+        // wait for 1 second so 1,000,000 ticks
+        while (cm4.SysTick.CTRL.read().COUNTFLAG == 0) {
+            //systickVal = cm4.SysTick.VAL.read();
+            std.mem.doNotOptimizeAway(u32);
+        }
+
+        a -= 1;
+    }
+}
+
+pub fn sysTicks() u32 {
+    return cm4.SysTick.VAL.read().CURRENT;
 }

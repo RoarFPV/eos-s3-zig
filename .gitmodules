@@ -3,4 +3,4 @@
 	url = git@github.com:RoarFPV/microzig.git
 [submodule "deps/regz"]
 	path = deps/regz
-	url = git@github.com:RoarFPV/microzig.git
+	url = git@github.com:RoarFPV/regz.git

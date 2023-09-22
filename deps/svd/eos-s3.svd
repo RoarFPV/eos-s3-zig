@@ -60,13 +60,13 @@
       </addressBlock>
       <registers>
         <register>
-          <dim>35</dim>
+          <dim>46</dim>
           <dimIncrement>0x4</dimIncrement>
           <!-- TODO: add support for dimIndex to rez -->
           <!-- <dimIndex>0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34</dimIndex> -->
           <!-- <name>PAD_%s_CTRL</name> -->
           <name>PAD_CTRL</name>
-          <description>PAD_%s control register</description>
+          <description>PAD_[%s] control register</description>
           <addressOffset>0x0</addressOffset>
           <access>read-write</access>
           <resetValue>0x00000000</resetValue>
@@ -77,7 +77,7 @@
               <bitOffset>0</bitOffset>
               <bitWidth>2</bitWidth>
               <enumeratedValues>
-                <name>FUNC_SEL</name>
+                <name>FUNC_SEL_ENUM</name>
                 <usage>read-write</usage>
                 <enumeratedValue>
                   <name>alternative_0</name>
@@ -107,7 +107,7 @@
               <bitOffset>3</bitOffset>
               <bitWidth>2</bitWidth>
               <enumeratedValues>
-                <name>CTRL_SEL</name>
+                <name>CTRL_SEL_ENUM</name>
                 <usage>read-write</usage>
                 <enumeratedValue>
                   <name>a0_registers</name>
@@ -132,7 +132,7 @@
               <bitOffset>5</bitOffset>
               <bitWidth>1</bitWidth>
               <enumeratedValues>
-                <name>OEN</name>
+                <name>OEN_ENUM</name>
                 <usage>read-write</usage>
                 <enumeratedValue>
                   <name>normal_operation</name>
@@ -152,7 +152,7 @@
               <bitOffset>6</bitOffset>
               <bitWidth>2</bitWidth>
               <enumeratedValues>
-                <name>P</name>
+                <name>P_ENUM</name>
                 <usage>read-write</usage>
                 <enumeratedValue>
                   <name>z</name>
@@ -178,11 +178,11 @@
             </field>
             <field>
               <name>E</name>
-              <description>Driver Strenght</description>
+              <description>Driver Strength</description>
               <bitOffset>8</bitOffset>
               <bitWidth>2</bitWidth>
               <enumeratedValues>
-                <name>E</name>
+                <name>DriverStrength</name>
                 <usage>read-write</usage>
                 <enumeratedValue>
                   <name>current_2ma</name>
@@ -212,7 +212,7 @@
               <bitOffset>10</bitOffset>
               <bitWidth>1</bitWidth>
               <enumeratedValues>
-                <name>SR</name>
+                <name>SlewRate</name>
                 <usage>read-write</usage>
                 <enumeratedValue>
                   <name>slow</name>
@@ -252,7 +252,7 @@
               <bitOffset>12</bitOffset>
               <bitWidth>1</bitWidth>
               <enumeratedValues>
-                <name>SMT</name>
+                <name>SMT_ENUM</name>
                 <usage>read-write</usage>
                 <enumeratedValue>
                   <name>disable_trigger</name>
@@ -268,7 +268,7 @@
             </field>
           </fields>
         </register>
-        <register>
+        <!-- <register>
           <dim>11</dim>
           <dimIncrement>0x4</dimIncrement>
           <dimIndex>35,36,37,38,39,40,41,42,43,44,45</dimIndex>
@@ -469,7 +469,7 @@
               </enumeratedValues>
             </field>
           </fields>
-        </register>
+        </register> -->
         <register>
           <name>SDA0_SEL_REG</name>
           <description>Select pad for SDA function in I2C0 (only pad 1 is selectable)</description>
@@ -485,7 +485,7 @@
               <bitOffset>0</bitOffset>
               <bitWidth>1</bitWidth>
               <enumeratedValues>
-                <name>SEL</name>
+                <name>SDA0_SEL_REG_ENUM</name>
                 <usage>read-write</usage>
                 <enumeratedValue>
                   <name>default_undefined</name>
@@ -516,7 +516,7 @@
               <bitOffset>0</bitOffset>
               <bitWidth>2</bitWidth>
               <enumeratedValues>
-                <name>SEL</name>
+                <name>SDA1_SEL_REG_ENUM</name>
                 <usage>read-write</usage>
                 <enumeratedValue>
                   <name>default_undefined</name>
@@ -557,7 +557,7 @@
               <bitOffset>0</bitOffset>
               <bitWidth>1</bitWidth>
               <enumeratedValues>
-                <name>SEL</name>
+                <name>SDA2_SEL_REG_ENUM</name>
                 <usage>read-write</usage>
                 <enumeratedValue>
                   <name>default_undefined</name>
@@ -588,7 +588,7 @@
               <bitOffset>0</bitOffset>
               <bitWidth>1</bitWidth>
               <enumeratedValues>
-                <name>SEL</name>
+                <name>SCL0_SEL_REG_ENUM</name>
                 <usage>read-write</usage>
                 <enumeratedValue>
                   <name>default_undefined</name>
@@ -619,7 +619,7 @@
               <bitOffset>0</bitOffset>
               <bitWidth>2</bitWidth>
               <enumeratedValues>
-                <name>SEL</name>
+                <name>SCL1_SEL_REG_ENUM</name>
                 <usage>read-write</usage>
                 <enumeratedValue>
                   <name>default_undefined</name>
@@ -660,7 +660,7 @@
               <bitOffset>0</bitOffset>
               <bitWidth>1</bitWidth>
               <enumeratedValues>
-                <name>SEL</name>
+                <name>SCL2_SEL_REG_ENUM</name>
                 <usage>read-write</usage>
                 <enumeratedValue>
                   <name>default_undefined</name>
@@ -759,7 +759,7 @@
               <bitOffset>0</bitOffset>
               <bitWidth>2</bitWidth>
               <enumeratedValues>
-                <name>SEL</name>
+                <name>PDM_DATA_SELE_ENUM</name>
                 <usage>read-write</usage>
                 <enumeratedValue>
                   <name>undefined</name>
@@ -795,7 +795,7 @@
               <bitOffset>0</bitOffset>
               <bitWidth>2</bitWidth>
               <enumeratedValues>
-                <name>SEL</name>
+                <name>I2S_DATA_SELECT_ENUM</name>
                 <usage>read-write</usage>
                 <enumeratedValue>
                   <name>undefined</name>
@@ -831,7 +831,7 @@
               <bitOffset>0</bitOffset>
               <bitWidth>3</bitWidth>
               <enumeratedValues>
-                <name>SEL</name>
+                <name>UART_rxd_SEL_ENUM</name>
                 <usage>read-write</usage>
                 <enumeratedValue>
                   <name>undefined</name>
@@ -877,7 +877,7 @@
               <bitOffset>0</bitOffset>
               <bitWidth>3</bitWidth>
               <enumeratedValues>
-                <name>SEL</name>
+                <name>IrDA_Sirin_SEL_ENUM</name>
                 <usage>read-write</usage>
                 <enumeratedValue>
                   <name>undefined</name>
@@ -938,7 +938,7 @@
               <bitOffset>0</bitOffset>
               <bitWidth>1</bitWidth>
               <enumeratedValues>
-                <name>SEL</name>
+                <name>S_INTR_0_SEL_REG_ENUM</name>
                 <usage>read-write</usage>
                 <enumeratedValue>
                   <name>undefined</name>
@@ -969,7 +969,7 @@
               <bitOffset>0</bitOffset>
               <bitWidth>3</bitWidth>
               <enumeratedValues>
-                <name>SEL</name>
+                <name>S_INTR_1_SEL_REG_ENUM</name>
                 <usage>read-write</usage>
                 <enumeratedValue>
                   <name>undefined</name>
@@ -1025,7 +1025,7 @@
               <bitOffset>0</bitOffset>
               <bitWidth>3</bitWidth>
               <enumeratedValues>
-                <name>SEL</name>
+                <name>S_INTR_2_SEL_ENUM</name>
                 <usage>read-write</usage>
                 <enumeratedValue>
                   <name>undefined</name>
@@ -1081,7 +1081,7 @@
               <bitOffset>0</bitOffset>
               <bitWidth>3</bitWidth>
               <enumeratedValues>
-                <name>SEL</name>
+                <name>S_INTR_3_SEL_ENUM</name>
                 <usage>read-write</usage>
                 <enumeratedValue>
                   <name>undefined</name>
@@ -1137,7 +1137,7 @@
               <bitOffset>0</bitOffset>
               <bitWidth>3</bitWidth>
               <enumeratedValues>
-                <name>SEL</name>
+                <name>S_INTR_4_SEL_ENUM</name>
                 <usage>read-write</usage>
                 <enumeratedValue>
                   <name>undefined</name>
@@ -1188,7 +1188,7 @@
               <bitOffset>0</bitOffset>
               <bitWidth>3</bitWidth>
               <enumeratedValues>
-                <name>SEL</name>
+                <name>S_INTR_5_SEL_ENUM</name>
                 <usage>read-write</usage>
                 <enumeratedValue>
                   <name>undefined</name>
@@ -1290,7 +1290,7 @@
               <bitOffset>0</bitOffset>
               <bitWidth>3</bitWidth>
               <enumeratedValues>
-                <name>SEL</name>
+                <name>S_INTR_7_SEL_ENUM</name>
                 <usage>read-write</usage>
                 <enumeratedValue>
                   <name>undefined</name>
@@ -1529,7 +1529,7 @@
               <bitOffset>0</bitOffset>
               <bitWidth>1</bitWidth>
               <enumeratedValues>
-                <name>SEL</name>
+                <name>SW_CLK_SEL_ENUM</name>
                 <usage>read-write</usage>
                 <enumeratedValue>
                   <name>select_strap_pad_14_45</name>
@@ -1560,7 +1560,7 @@
               <bitOffset>0</bitOffset>
               <bitWidth>1</bitWidth>
               <enumeratedValues>
-                <name>SEL</name>
+                <name>SW_IO_SEL_ENUM</name>
                 <usage>read-write</usage>
                 <enumeratedValue>
                   <name>select_strap_pad_15_44</name>
@@ -1591,7 +1591,7 @@
               <bitOffset>0</bitOffset>
               <bitWidth>32</bitWidth>
               <enumeratedValues>
-                <name>SEL</name>
+                <name>FBIO_SEL_1_ENUM</name>
                 <usage>read-write</usage>
                 <enumeratedValue>
                   <name>undefined</name>
@@ -1622,7 +1622,7 @@
               <bitOffset>0</bitOffset>
               <bitWidth>14</bitWidth>
               <enumeratedValues>
-                <name>SEL</name>
+                <name>FBIO_SEL_2_ENUM</name>
                 <usage>read-write</usage>
                 <enumeratedValue>
                   <name>undefined</name>
@@ -1653,7 +1653,7 @@
               <bitOffset>0</bitOffset>
               <bitWidth>2</bitWidth>
               <enumeratedValues>
-                <name>SEL</name>
+                <name>SPI_SENSOR_MISO_SEL_ENUM</name>
                 <usage>read-write</usage>
                 <enumeratedValue>
                   <name>undefined</name>
@@ -1689,7 +1689,7 @@
               <bitOffset>0</bitOffset>
               <bitWidth>2</bitWidth>
               <enumeratedValues>
-                <name>SEL</name>
+                <name>SPI_SENSOR_MOSI_SEL_ENUM</name>
                 <usage>read-write</usage>
                 <enumeratedValue>
                   <name>undefined</name>
@@ -1871,7 +1871,7 @@
               <bitWidth>1</bitWidth>
               <access>read-write</access>
               <enumeratedValues>
-                <name>SEL</name>
+                <name>ADC_Control_SEL_ENUM</name>
                 <usage>read-write</usage>
                 <enumeratedValue>
                   <name>select_ch0</name>
@@ -2487,40 +2487,12 @@
               <description>Used to disable LDO_30 </description>
               <bitOffset>0</bitOffset>
               <bitWidth>1</bitWidth>
-              <enumeratedValues>
-                <name>DIS</name>
-                <usage>read-write</usage>
-                <enumeratedValue>
-                  <name>enable</name>
-                  <description>Enable LDO_30 output</description>
-                  <value>0</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>disable</name>
-                  <description>Disable LDO_30 output</description>
-                  <value>1</value>
-                </enumeratedValue>
-              </enumeratedValues>
             </field>
             <field>
               <name>DISPG</name>
               <description>Used to disable the power good comparator </description>
               <bitOffset>1</bitOffset>
               <bitWidth>1</bitWidth>
-              <enumeratedValues>
-                <name>DISPG</name>
-                <usage>read-write</usage>
-                <enumeratedValue>
-                  <name>enable</name>
-                  <description>Enable LDO_30 power good comparator</description>
-                  <value>0</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>disable</name>
-                  <description>Disable LDO_30 power good comparator</description>
-                  <value>1</value>
-                </enumeratedValue>
-              </enumeratedValues>
             </field>
             <field>
               <name>IMAX</name>
@@ -2739,220 +2711,26 @@
               <description>Used to disable LDO_30 </description>
               <bitOffset>0</bitOffset>
               <bitWidth>1</bitWidth>
-              <enumeratedValues>
-                <name>DIS</name>
-                <usage>read-write</usage>
-                <enumeratedValue>
-                  <name>enable</name>
-                  <description>Enable LDO_50 output</description>
-                  <value>0</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>disable</name>
-                  <description>Disable LDO_50 output</description>
-                  <value>1</value>
-                </enumeratedValue>
-              </enumeratedValues>
             </field>
             <field>
               <name>DISPG</name>
               <description>Used to disable the power good comparator </description>
               <bitOffset>1</bitOffset>
               <bitWidth>1</bitWidth>
-              <enumeratedValues>
-                <name>DISPG</name>
-                <usage>read-write</usage>
-                <enumeratedValue>
-                  <name>enable</name>
-                  <description>Enable LDO_50 power good comparator</description>
-                  <value>0</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>disable</name>
-                  <description>Disable LDO_50 power good comparator</description>
-                  <value>1</value>
-                </enumeratedValue>
-              </enumeratedValues>
             </field>
             <field>
               <name>IMAX</name>
               <description>Configures the control for maximum expected current imax current (mA)</description>
               <bitOffset>2</bitOffset>
               <bitWidth>3</bitWidth>
-              <enumeratedValues>
-                <name>IMAX</name>
-                <usage>read-write</usage>
-                <enumeratedValue>
-                  <name>max_50mA_current</name>
-                  <description>Configure the maximum current for LDO_50 as 50mA</description>
-                  <value>0</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>max_30mA_current</name>
-                  <description>Configure the maximum current for LDO_50 as 30mA</description>
-                  <value>1</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>max_20mA_current</name>
-                  <description>Configure the maximum current for LDO_50 as 20mA</description>
-                  <value>2</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>max_12mA_current</name>
-                  <description>Configure the maximum current for LDO_50 as 12mA (default)</description>
-                  <value>3</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>max_8mA_current</name>
-                  <description>Configure the maximum current for LDO_50 as 8mA</description>
-                  <value>4</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>max_4mA_current</name>
-                  <description>Configure the maximum current for LDO_50 as 4mA</description>
-                  <value>5</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>max_2mA_current</name>
-                  <description>Configure the maximum current for LDO_50 as 2mA</description>
-                  <value>6</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>max_1mA_current</name>
-                  <description>Configure the maximum current for LDO_50 as 1mA</description>
-                  <value>7</value>
-                </enumeratedValue>
-              </enumeratedValues>
+              <enumeratedValues derivedFrom="IMAX"/>
             </field>
             <field>
               <name>DI</name>
               <description>Output voltage programming. Note: Please keep LDO_30_DI and LDO_50_DI to be equal values for proper operation and lower power consumption.</description>
               <bitOffset>5</bitOffset>
               <bitWidth>5</bitWidth>
-              <enumeratedValues>
-                <name>DI</name>
-                <usage>read-write</usage>
-                <enumeratedValue>
-                  <name>as_0_75v_output</name>
-                  <description>Configures the LDO_50 output voltage as 0.75v</description>
-                  <value>0</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>as_0_77v_output</name>
-                  <description>Configures the LDO_50 output voltage as 0.77v</description>
-                  <value>1</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>as_0_79v_output</name>
-                  <description>Configures the LDO_50 output voltage as 0.79v</description>
-                  <value>2</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>as_0_81v_output</name>
-                  <description>Configures the LDO_50 output voltage as 0.81v</description>
-                  <value>3</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>as_0_83v_output</name>
-                  <description>Configures the LDO_50 output voltage as 0.83v</description>
-                  <value>4</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>as_0_85v_output</name>
-                  <description>Configures the LDO_50 output voltage as 0.85v</description>
-                  <value>5</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>as_0_87v_output</name>
-                  <description>Configures the LDO_50 output voltage as 0.87v</description>
-                  <value>6</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>as_0_89v_output</name>
-                  <description>Configures the LDO_50 output voltage as 0.89v</description>
-                  <value>7</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>as_0_91v_output</name>
-                  <description>Configures the LDO_50 output voltage as 0.91v</description>
-                  <value>8</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>as_0_93v_output</name>
-                  <description>Configures the LDO_50 output voltage as 0.93v</description>
-                  <value>9</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>as_0_95v_output</name>
-                  <description>Configures the LDO_50 output voltage as 0.95v</description>
-                  <value>10</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>as_0_97v_output</name>
-                  <description>Configures the LDO_50 output voltage as 0.97v</description>
-                  <value>11</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>as_0_99v_output</name>
-                  <description>Configures the LDO_50 output voltage as 0.99v</description>
-                  <value>12</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>as_1_01v_output</name>
-                  <description>Configures the LDO_50 output voltage as 1.01v</description>
-                  <value>13</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>as_1_03v_output</name>
-                  <description>Configures the LDO_50 output voltage as 1.03v</description>
-                  <value>14</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>as_1_05v_output</name>
-                  <description>Configures the LDO_50 output voltage as 1.05v</description>
-                  <value>15</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>as_1_07v_output</name>
-                  <description>Configures the LDO_50 output voltage as 1.07v</description>
-                  <value>16</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>as_1_09v_output</name>
-                  <description>Configures the LDO_50 output voltage as 1.09v (default)</description>
-                  <value>17</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>as_1_11v_output</name>
-                  <description>Configures the LDO_50 output voltage as 1.11v</description>
-                  <value>18</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>as_1_13v_output</name>
-                  <description>Configures the LDO_50 output voltage as 1.13v</description>
-                  <value>19</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>as_1_15v_output</name>
-                  <description>Configures the LDO_50 output voltage as 1.15v</description>
-                  <value>20</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>as_1_17v_output</name>
-                  <description>Configures the LDO_50 output voltage as 1.17v</description>
-                  <value>21</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>as_1_19v_output</name>
-                  <description>Configures the LDO_50 output voltage as 1.19v</description>
-                  <value>22</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>as_1_21v_output</name>
-                  <description>Configures the LDO_50 output voltage as 1.21v</description>
-                  <value>23</value>
-                </enumeratedValue>
-              </enumeratedValues>
+              <enumeratedValues derivedFrom="DI"/>
             </field>
           </fields>
         </register>
@@ -4181,20 +3959,7 @@
               <bitOffset>9</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
-              <enumeratedValues>
-                <name>Enable_Clock_Divider</name>
-                <usage>read-write</usage>
-                <enumeratedValue>
-                  <name>disable</name>
-                  <description>Clock divider is OFF, Output Source clock directly</description>
-                  <value>0</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>enable</name>
-                  <description>Clock divider is ON</description>
-                  <value>1</value>
-                </enumeratedValue>
-              </enumeratedValues>
+              
             </field>
           </fields>
         </register>
@@ -4256,20 +4021,7 @@
               <bitOffset>9</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
-              <enumeratedValues>
-                <name>Enable_Clock_Divider</name>
-                <usage>read-write</usage>
-                <enumeratedValue>
-                  <name>disable</name>
-                  <description>Clock divider is OFF, Output Source clock directly</description>
-                  <value>0</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>enable</name>
-                  <description>Clock divider is ON</description>
-                  <value>1</value>
-                </enumeratedValue>
-              </enumeratedValues>
+              
             </field>
           </fields>
         </register>
@@ -4287,15 +4039,7 @@
               <bitOffset>0</bitOffset>
               <bitWidth>2</bitWidth>
               <access>read-write</access>
-              <enumeratedValues>
-                <name>Clock_Source_Selection</name>
-                <usage>read-write</usage>
-                <enumeratedValue>
-                  <name>with_hs_clk</name>
-                  <description>Selects the High speed/Divided clock</description>
-                  <value>0</value>
-                </enumeratedValue>
-              </enumeratedValues>
+              <enumeratedValues  derivedFrom="Clock_Source_Selection"/>
             </field>
           </fields>
         </register>
@@ -4326,20 +4070,7 @@
               <bitOffset>9</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
-              <enumeratedValues>
-                <name>Enable_Clock_Divider</name>
-                <usage>read-write</usage>
-                <enumeratedValue>
-                  <name>disable</name>
-                  <description>Clock divider is OFF, Output Source clock directly</description>
-                  <value>0</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>enable</name>
-                  <description>Clock divider is ON</description>
-                  <value>1</value>
-                </enumeratedValue>
-              </enumeratedValues>
+              
             </field>
           </fields>
         </register>
@@ -4370,20 +4101,7 @@
               <bitOffset>9</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
-              <enumeratedValues>
-                <name>Enable_Clock_Divider</name>
-                <usage>read-write</usage>
-                <enumeratedValue>
-                  <name>disable</name>
-                  <description>Clock divider is OFF, Output Source clock directly</description>
-                  <value>0</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>enable</name>
-                  <description>Clock divider is ON</description>
-                  <value>1</value>
-                </enumeratedValue>
-              </enumeratedValues>
+              
             </field>
           </fields>
         </register>
@@ -4405,15 +4123,7 @@
               <description>The selected the clock source</description>
               <bitOffset>0</bitOffset>
               <bitWidth>2</bitWidth>
-              <enumeratedValues>
-                <name>Clock_Source_Selection</name>
-                <usage>read-write</usage>
-                <enumeratedValue>
-                  <name>with_hs_clk</name>
-                  <description>Selects the High speed/Divided clock</description>
-                  <value>0</value>
-                </enumeratedValue>
-              </enumeratedValues>
+              <enumeratedValues  derivedFrom="Clock_Source_Selection"/>
             </field>
           </fields>
         </register>
@@ -4444,20 +4154,7 @@
               <bitOffset>9</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
-              <enumeratedValues>
-                <name>Enable_Clock_Divider</name>
-                <usage>read-write</usage>
-                <enumeratedValue>
-                  <name>disable</name>
-                  <description>Clock divider is OFF, Output Source clock directly</description>
-                  <value>0</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>enable</name>
-                  <description>Clock divider is ON</description>
-                  <value>1</value>
-                </enumeratedValue>
-              </enumeratedValues>
+              
             </field>
           </fields>
         </register>
@@ -4475,20 +4172,7 @@
               <bitOffset>0</bitOffset>
               <bitWidth>2</bitWidth>
               <access>read-write</access>
-              <enumeratedValues>
-                <name>Clock_Source_Selection</name>
-                <usage>read-write</usage>
-                <enumeratedValue>
-                  <name>with_hs_clk</name>
-                  <description>Selects the High speed/Divided clock</description>
-                  <value>0</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>with_32khz_clk</name>
-                  <description>Selects the 32KHz oscillator</description>
-                  <value>1</value>
-                </enumeratedValue>
-              </enumeratedValues>
+              <enumeratedValues  derivedFrom="Clock_Source_Selection"/>
             </field>
           </fields>
         </register>
@@ -4519,20 +4203,7 @@
               <bitOffset>9</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
-              <enumeratedValues>
-                <name>Enable_Clock_Divider</name>
-                <usage>read-write</usage>
-                <enumeratedValue>
-                  <name>disable</name>
-                  <description>Clock divider is OFF, Output Source clock directly</description>
-                  <value>0</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>enable</name>
-                  <description>Clock divider is ON</description>
-                  <value>1</value>
-                </enumeratedValue>
-              </enumeratedValues>
+              
             </field>
           </fields>
         </register>
@@ -4563,20 +4234,7 @@
               <bitOffset>9</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
-              <enumeratedValues>
-                <name>Enable_Clock_Divider</name>
-                <usage>read-write</usage>
-                <enumeratedValue>
-                  <name>disable</name>
-                  <description>Clock divider is OFF, Output Source clock directly</description>
-                  <value>0</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>enable</name>
-                  <description>Clock divider is ON</description>
-                  <value>1</value>
-                </enumeratedValue>
-              </enumeratedValues>
+              
             </field>
           </fields>
         </register>
@@ -4592,15 +4250,7 @@
               <description>Select the clock source</description>
               <bitOffset>0</bitOffset>
               <bitWidth>2</bitWidth>
-              <enumeratedValues>
-                <name>Clock_Source_Selection</name>
-                <usage>read-write</usage>
-                <enumeratedValue>
-                  <name>with_hs_clk</name>
-                  <description>Selects the High speed/Divided clock</description>
-                  <value>0</value>
-                </enumeratedValue>
-              </enumeratedValues>
+              <enumeratedValues  derivedFrom="Clock_Source_Selection"/>
             </field>
           </fields>
         </register>
@@ -4631,20 +4281,7 @@
               <bitOffset>9</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
-              <enumeratedValues>
-                <name>Enable_Clock_Divider</name>
-                <usage>read-write</usage>
-                <enumeratedValue>
-                  <name>disable</name>
-                  <description>Clock divider is OFF, Output Source clock directly</description>
-                  <value>0</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>enable</name>
-                  <description>Clock divider is ON</description>
-                  <value>1</value>
-                </enumeratedValue>
-              </enumeratedValues>
+              
             </field>
           </fields>
         </register>
@@ -4662,20 +4299,7 @@
               <bitOffset>0</bitOffset>
               <bitWidth>2</bitWidth>
               <access>read-write</access>
-              <enumeratedValues>
-                <name>Clock_Source_Selection</name>
-                <usage>read-write</usage>
-                <enumeratedValue>
-                  <name>with_hs_clk</name>
-                  <description>Selects the High speed/Divided clock</description>
-                  <value>0</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>with_32khz_clk</name>
-                  <description>Selects the 32KHz oscillator</description>
-                  <value>1</value>
-                </enumeratedValue>
-              </enumeratedValues>
+              <enumeratedValues  derivedFrom="Clock_Source_Selection"/>
             </field>
           </fields>
         </register>
@@ -4788,20 +4412,7 @@
               <bitOffset>0</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
-              <enumeratedValues>
-                <name>Path_0_Gating_Control</name>
-                <usage>read-write</usage>
-                <enumeratedValue>
-                  <name>stop</name>
-                  <description>Clock is stop</description>
-                  <value>0</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>run</name>
-                  <description>Clock is runnig</description>
-                  <value>1</value>
-                </enumeratedValue>
-              </enumeratedValues>
+             <enumeratedValues derivedFrom="Path_0_Gating_Control"/>
             </field>
             <field>
               <name>Path_1_Gating_Control</name>
@@ -4835,20 +4446,7 @@
               <bitOffset>0</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
-              <enumeratedValues>
-                <name>Path_0_Gating_Control</name>
-                <usage>read-write</usage>
-                <enumeratedValue>
-                  <name>stop</name>
-                  <description>Clock is stop</description>
-                  <value>0</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>run</name>
-                  <description>Clock is runnig</description>
-                  <value>1</value>
-                </enumeratedValue>
-              </enumeratedValues>
+              <enumeratedValues derivedFrom="Path_0_Gating_Control"/>
             </field>
           </fields>
         </register>
@@ -4866,20 +4464,7 @@
               <bitOffset>0</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
-              <enumeratedValues>
-                <name>Path_0_Gating_Control</name>
-                <usage>read-write</usage>
-                <enumeratedValue>
-                  <name>stop</name>
-                  <description>Clock is stop</description>
-                  <value>0</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>run</name>
-                  <description>Clock is runnig</description>
-                  <value>1</value>
-                </enumeratedValue>
-              </enumeratedValues>
+              <enumeratedValues derivedFrom="Path_0_Gating_Control"/>
             </field>
             <field>
               <name>Path_2_Gating_Control</name>
@@ -4913,20 +4498,7 @@
               <bitOffset>0</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-only</access>
-              <enumeratedValues>
-                <name>Path_0_Gating_Control</name>
-                <usage>read-write</usage>
-                <enumeratedValue>
-                  <name>stop</name>
-                  <description>Clock is stop</description>
-                  <value>0</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>run</name>
-                  <description>Clock is runnig</description>
-                  <value>1</value>
-                </enumeratedValue>
-              </enumeratedValues>
+              <enumeratedValues derivedFrom="Path_0_Gating_Control"/>
             </field>
             <field>
               <name>Path_1_Gating_Control</name>
@@ -4992,20 +4564,7 @@
               <bitOffset>0</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
-              <enumeratedValues>
-                <name>Path_0_Gating_Control</name>
-                <usage>read-write</usage>
-                <enumeratedValue>
-                  <name>stop</name>
-                  <description>Clock is stop</description>
-                  <value>0</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>run</name>
-                  <description>Clock is runnig</description>
-                  <value>1</value>
-                </enumeratedValue>
-              </enumeratedValues>
+              <enumeratedValues derivedFrom="Path_0_Gating_Control"/>
             </field>
           </fields>
         </register>
@@ -5030,20 +4589,7 @@
               <bitOffset>0</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
-              <enumeratedValues>
-                <name>Path_0_Gating_Control</name>
-                <usage>read-write</usage>
-                <enumeratedValue>
-                  <name>stop</name>
-                  <description>Clock is stop</description>
-                  <value>0</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>run</name>
-                  <description>Clock is runnig</description>
-                  <value>1</value>
-                </enumeratedValue>
-              </enumeratedValues>
+              <enumeratedValues derivedFrom="Path_0_Gating_Control"/>
             </field>
           </fields>
         </register>
@@ -5068,20 +4614,7 @@
               <bitOffset>0</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
-              <enumeratedValues>
-                <name>Path_0_Gating_Control</name>
-                <usage>read-write</usage>
-                <enumeratedValue>
-                  <name>stop</name>
-                  <description>Clock is stop</description>
-                  <value>0</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>run</name>
-                  <description>Clock is runnig</description>
-                  <value>1</value>
-                </enumeratedValue>
-              </enumeratedValues>
+              <enumeratedValues derivedFrom="Path_0_Gating_Control"/>
             </field>
           </fields>
         </register>
@@ -5106,20 +4639,7 @@
               <bitOffset>0</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
-              <enumeratedValues>
-                <name>Path_0_Gating_Control</name>
-                <usage>read-write</usage>
-                <enumeratedValue>
-                  <name>stop</name>
-                  <description>Clock is stop</description>
-                  <value>0</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>run</name>
-                  <description>Clock is runnig</description>
-                  <value>1</value>
-                </enumeratedValue>
-              </enumeratedValues>
+              <enumeratedValues derivedFrom="Path_0_Gating_Control"/>
             </field>
           </fields>
         </register>
@@ -5137,20 +4657,7 @@
               <bitOffset>0</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
-              <enumeratedValues>
-                <name>Path_0_Gating_Control</name>
-                <usage>read-write</usage>
-                <enumeratedValue>
-                  <name>stop</name>
-                  <description>Clock is stop</description>
-                  <value>0</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>run</name>
-                  <description>Clock is runnig</description>
-                  <value>1</value>
-                </enumeratedValue>
-              </enumeratedValues>
+              <enumeratedValues derivedFrom="Path_0_Gating_Control"/>
             </field>
           </fields>
         </register>
@@ -5168,50 +4675,36 @@
               <description>1'b1 : Enable the Software Reset. FW need to disable it manually.</description>
               <bitOffset>0</bitOffset>
               <bitWidth>1</bitWidth>
-              <enumeratedValues>
-                <name>PF_FIFO_0_SW_RESET</name>
-                <usage>read-write</usage>
-                <enumeratedValue>
-                  <name>enable</name>
-                  <description>Enable the software reset. FW need to disable it manually</description>
-                  <value>1</value>
-                </enumeratedValue>
-              </enumeratedValues>
             </field>
             <field>
               <name>PF_FIFO_1_SW_RESET</name>
               <description>1'b1 : Enable the Software Reset. FW need to disable it manually.</description>
               <bitOffset>1</bitOffset>
               <bitWidth>1</bitWidth>
-              <enumeratedValues derivedFrom="PF_FIFO_0_SW_RESET"/>
             </field>
             <field>
               <name>PF_FIFO_2_SW_RESET</name>
               <description>1'b1 : Enable the Software Reset. FW need to disable it manually.</description>
               <bitOffset>2</bitOffset>
               <bitWidth>1</bitWidth>
-              <enumeratedValues derivedFrom="PF_FIFO_0_SW_RESET"/>
             </field>
             <field>
               <name>PF_FIFO_8k_SW_RESET</name>
               <description>1'b1 : Enable the Software Reset. FW need to disable it manually.</description>
               <bitOffset>3</bitOffset>
               <bitWidth>1</bitWidth>
-              <enumeratedValues derivedFrom="PF_FIFO_0_SW_RESET"/>
             </field>
             <field>
               <name>PF_ASYNC_FIFO_0_SW_RESET</name>
               <description>1'b1 : Enable the Software Reset. FW need to disable it manually.(R08_P3 as well)</description>
               <bitOffset>4</bitOffset>
               <bitWidth>1</bitWidth>
-              <enumeratedValues derivedFrom="PF_FIFO_0_SW_RESET"/>
             </field>
             <field>
               <name>PF_Peripheral_SW_RESET</name>
               <description>1'b1 : Enable the Software Reset. FW need to disable it manually.</description>
               <bitOffset>5</bitOffset>
               <bitWidth>1</bitWidth>
-              <enumeratedValues derivedFrom="PF_FIFO_0_SW_RESET"/>
             </field>
           </fields>
         </register>
@@ -5229,15 +4722,6 @@
               <bitOffset>0</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
-              <enumeratedValues>
-                <name>FFE_0_X1_SW_Reset</name>
-                <usage>read-write</usage>
-                <enumeratedValue>
-                  <name>enable</name>
-                  <description>Enable the software reset. FW need to disable it manually. (R01_P3_FFE as well)</description>
-                  <value>1</value>
-                </enumeratedValue>
-              </enumeratedValues>
             </field>
             <field>
               <name>FFE_0_X4_SW_Reset</name>
@@ -5245,15 +4729,6 @@
               <bitOffset>0</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
-              <enumeratedValues>
-                <name>FFE_0_X1_SW_Reset</name>
-                <usage>read-write</usage>
-                <enumeratedValue>
-                  <name>enable</name>
-                  <description>Enable the software reset. FW need to disable it manually. (R01_P3_FFE as well)</description>
-                  <value>1</value>
-                </enumeratedValue>
-              </enumeratedValues>
             </field>
           </fields>
         </register>
@@ -5461,20 +4936,7 @@
               <description>1'b1 Clock Divider is ON. 1'b0 Clock Divider is OFF, Output the Source Clock Directly</description>
               <bitOffset>9</bitOffset>
               <bitWidth>1</bitWidth>
-              <enumeratedValues>
-                <name>Enable_Clock_Divider</name>
-                <usage>read-write</usage>
-                <enumeratedValue>
-                  <name>disable</name>
-                  <description>Clock divider is OFF, Output Source clock directly</description>
-                  <value>0</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>enable</name>
-                  <description>Clock divider is ON</description>
-                  <value>1</value>
-                </enumeratedValue>
-              </enumeratedValues>
+              
             </field>
           </fields>
         </register>
@@ -5631,20 +5093,7 @@
               <description>This bit is used to turn off the clock for the SYNC down Divider</description>
               <bitOffset>4</bitOffset>
               <bitWidth>1</bitWidth>
-              <enumeratedValues>
-                <name>C01_CLK_DIV_CG</name>
-                <usage>read-write</usage>
-                <enumeratedValue>
-                  <name>stop</name>
-                  <description>Clock is stop</description>
-                  <value>0</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>run</name>
-                  <description>Clock is runnig</description>
-                  <value>1</value>
-                </enumeratedValue>
-              </enumeratedValues>
+             <enumeratedValues derivedFrom="C01_CLK_DIV_CG_ENUM"/>
             </field>
           </fields>
         </register>
@@ -5668,20 +5117,7 @@
               <description>This bit is used to turn off the clock for the SYNC down Divider</description>
               <bitOffset>4</bitOffset>
               <bitWidth>1</bitWidth>
-              <enumeratedValues>
-                <name>C01_CLK_DIV_CG</name>
-                <usage>read-write</usage>
-                <enumeratedValue>
-                  <name>stop</name>
-                  <description>Clock is stop</description>
-                  <value>0</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>run</name>
-                  <description>Clock is runnig</description>
-                  <value>1</value>
-                </enumeratedValue>
-              </enumeratedValues>
+             <enumeratedValues derivedFrom="C01_CLK_DIV_CG_ENUM"/>
             </field>
           </fields>
         </register>
@@ -5706,7 +5142,7 @@
               <bitOffset>4</bitOffset>
               <bitWidth>1</bitWidth>
               <enumeratedValues>
-                <name>C01_CLK_DIV_CG</name>
+                <name>C01_CLK_DIV_CG_ENUM</name>
                 <usage>read-write</usage>
                 <enumeratedValue>
                   <name>stop</name>
@@ -5736,20 +5172,7 @@
               <bitOffset>0</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
-              <enumeratedValues>
-                <name>Path_0_Gating_Control</name>
-                <usage>read-write</usage>
-                <enumeratedValue>
-                  <name>stop</name>
-                  <description>Clock is stop</description>
-                  <value>0</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>run</name>
-                  <description>Clock is runnig</description>
-                  <value>1</value>
-                </enumeratedValue>
-              </enumeratedValues>
+              <enumeratedValues derivedFrom="Path_0_Gating_Control"/>
             </field>
             <field>
               <name>Path_1_Gating_Control</name>
@@ -5934,7 +5357,7 @@
               <bitWidth>1</bitWidth>
               <access>read-write</access>
               <enumeratedValues>
-                <name>Clock_Source_Selection</name>
+                <name>Clock_Source_Selection_1bit</name>
                 <usage>read-write</usage>
                 <enumeratedValue>
                   <name>with_hs_clk</name>
@@ -5964,20 +5387,7 @@
               <bitOffset>0</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
-              <enumeratedValues>
-                <name>Clock_Source_Selection</name>
-                <usage>read-write</usage>
-                <enumeratedValue>
-                  <name>with_hs_clk</name>
-                  <description>Selects the High speed/Divided clock</description>
-                  <value>0</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>with_32khz_clk</name>
-                  <description>Selects the 32KHz oscillator</description>
-                  <value>1</value>
-                </enumeratedValue>
-              </enumeratedValues>
+              <enumeratedValues  derivedFrom="Clock_Source_Selection_1bit"/>
             </field>
           </fields>
         </register>
@@ -5995,20 +5405,7 @@
               <bitOffset>0</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
-              <enumeratedValues>
-                <name>Clock_Source_Selection</name>
-                <usage>read-write</usage>
-                <enumeratedValue>
-                  <name>with_hs_clk</name>
-                  <description>Selects the High speed/Divided clock</description>
-                  <value>0</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>with_32khz_clk</name>
-                  <description>Selects the 32KHz oscillator</description>
-                  <value>1</value>
-                </enumeratedValue>
-              </enumeratedValues>
+              <enumeratedValues  derivedFrom="Clock_Source_Selection_1bit"/>
             </field>
           </fields>
         </register>
@@ -6026,20 +5423,7 @@
               <bitOffset>0</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
-              <enumeratedValues>
-                <name>Clock_Source_Selection</name>
-                <usage>read-write</usage>
-                <enumeratedValue>
-                  <name>with_hs_clk</name>
-                  <description>Selects the High speed/Divided clock</description>
-                  <value>0</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>with_32khz_clk</name>
-                  <description>Selects the 32KHz oscillator</description>
-                  <value>1</value>
-                </enumeratedValue>
-              </enumeratedValues>
+      <enumeratedValues  derivedFrom="Clock_Source_Selection_1bit"/>
             </field>
           </fields>
         </register>
@@ -6057,20 +5441,7 @@
               <bitOffset>0</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
-              <enumeratedValues>
-                <name>Clock_Source_Selection</name>
-                <usage>read-write</usage>
-                <enumeratedValue>
-                  <name>with_hs_clk</name>
-                  <description>Selects the High speed/Divided clock</description>
-                  <value>0</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>with_32khz_clk</name>
-                  <description>Selects the 32KHz oscillator</description>
-                  <value>1</value>
-                </enumeratedValue>
-              </enumeratedValues>
+<enumeratedValues  derivedFrom="Clock_Source_Selection_1bit"/>
             </field>
           </fields>
         </register>
@@ -6088,20 +5459,7 @@
               <bitOffset>0</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
-              <enumeratedValues>
-                <name>Clock_Source_Selection</name>
-                <usage>read-write</usage>
-                <enumeratedValue>
-                  <name>with_hs_clk</name>
-                  <description>Selects the High speed/Divided clock</description>
-                  <value>0</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>with_32khz_clk</name>
-                  <description>Selects the 32KHz oscillator</description>
-                  <value>1</value>
-                </enumeratedValue>
-              </enumeratedValues>
+              <enumeratedValues  derivedFrom="Clock_Source_Selection_1bit"/>
             </field>
           </fields>
         </register>
@@ -22864,7 +22222,7 @@
               <name>FEN</name>
               <description>Enable FIFOs:</description>
               <bitOffset>4</bitOffset>
-              <bitWidth>2</bitWidth>
+              <bitWidth>1</bitWidth>
               <access>read-write</access>
               <enumeratedValues>
                 <name>FEN</name>
