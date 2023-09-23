@@ -47,6 +47,9 @@ pub fn main() !void {
 
     initLeds();
 
+    const fabricId = regs.MISC.FB_DEVICE_ID.read();
+    uart.log("{x}", .{fabricId.ID});
+
     var on = false;
     while (true) {
         const start = hw.sysTicks();

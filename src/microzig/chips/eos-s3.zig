@@ -32,9 +32,11 @@ pub const devices = struct {
             UsageFault: Handler = unhandled,
             reserved5: [4]u32 = undefined,
             SVCall: Handler = unhandled,
-            reserved10: [2]u32 = undefined,
+            DebugMon: Handler = unhandled,
+            reserved10: [1]u32 = undefined,
             PendSV: Handler = unhandled,
             SysTick: Handler = unhandled,
+
             Software_Interrupt_2: Handler = unhandled,
             Software_Interrupt_1: Handler = unhandled,
             reserved16: [1]u32 = undefined,
@@ -42,7 +44,7 @@ pub const devices = struct {
             Fabric_Message: Handler = unhandled,
             ///  Global GPIO interrupt
             Sensor_GPIO: Handler = unhandled,
-            reserved20: [1]u32 = undefined,
+            M4SramSleep: Handler = undefined,
             ///  Global UART interrupt
             UART: Handler = unhandled,
             ///  Interrupt triggered when a timer counts down to 0. The status can be read and cleared (0x4000_4830[2]), and can be masked (0x4000_4834[2] for Host), and (0x4000_4838[2] for M4).
@@ -92,6 +94,8 @@ pub const devices = struct {
             I2SSLV_M4_tx_or_intr: Handler = unhandled,
             LPSD_VOICE_OFF: Handler = unhandled,
             DMIC_VOICE_OFF: Handler = unhandled,
+            reserved45: [3]u32 = undefined,
+            // {.__val = (0x20021FFF)}
         };
 
         pub const peripherals = struct {
@@ -143,6 +147,10 @@ pub const devices = struct {
             pub const ExtRegsFFE = Peripheral(0x4004a000, types.peripherals.ExtRegsFFE);
             ///  Communication Manager - Top Level controller
             pub const SPI_TLC = Peripheral(0x40050000, types.peripherals.SPI_TLC);
+
+            ///  Nested Vectored Interrupt Controller
+            pub const NVIC = Peripheral(0xe000e100, types.peripherals.NVIC);
+
             ///  System control block ACTLR
             pub const SCB_ACTRL = Peripheral(0xe000e008, types.peripherals.SCB_ACTRL);
         };
@@ -151,6 +159,89 @@ pub const devices = struct {
 
 pub const types = struct {
     pub const peripherals = struct {
+        ///  Nested Vectored Interrupt Controller
+        pub const NVIC = extern struct {
+            ///  Interrupt Set-Enable Register
+            ISER0: mmio.Mmio(packed struct(u32) {
+                ///  SETENA
+                SETENA: u32,
+            }),
+            ///  Interrupt Set-Enable Register
+            ISER1: mmio.Mmio(packed struct(u32) {
+                ///  SETENA
+                SETENA: u32,
+            }),
+            reserved128: [124]u8,
+            ///  Interrupt Clear-Enable Register
+            ICER0: mmio.Mmio(packed struct(u32) {
+                ///  CLRENA
+                CLRENA: u32,
+            }),
+            ///  Interrupt Clear-Enable Register
+            ICER1: mmio.Mmio(packed struct(u32) {
+                ///  CLRENA
+                CLRENA: u32,
+            }),
+
+            reserved256: [124]u8,
+            ///  Interrupt Set-Pending Register
+            ISPR0: mmio.Mmio(packed struct(u32) {
+                ///  SETPEND
+                SETPEND: u32,
+            }),
+            ///  Interrupt Set-Pending Register
+            ISPR1: mmio.Mmio(packed struct(u32) {
+                ///  SETPEND
+                SETPEND: u32,
+            }),
+
+            reserved384: [124]u8,
+            ///  Interrupt Clear-Pending Register
+            ICPR0: mmio.Mmio(packed struct(u32) {
+                ///  CLRPEND
+                CLRPEND: u32,
+            }),
+            ///  Interrupt Clear-Pending Register
+            ICPR1: mmio.Mmio(packed struct(u32) {
+                ///  CLRPEND
+                CLRPEND: u32,
+            }),
+            ///  Interrupt Clear-Pending Register
+            reserved512: [124]u8,
+            ///  Interrupt Active Bit Register
+            IABR0: mmio.Mmio(packed struct(u32) {
+                ///  ACTIVE
+                ACTIVE: u32,
+            }),
+            ///  Interrupt Active Bit Register
+            IABR1: mmio.Mmio(packed struct(u32) {
+                ///  ACTIVE
+                ACTIVE: u32,
+            }),
+            reserved768: [124]u8,
+            ///  Interrupt Priority Register
+            IPR0: mmio.Mmio(packed struct(u32) {
+                ///  IPR_N0
+                IPR_N0: u8,
+                ///  IPR_N1
+                IPR_N1: u8,
+                ///  IPR_N2
+                IPR_N2: u8,
+                ///  IPR_N3
+                IPR_N3: u8,
+            }),
+            ///  Interrupt Priority Register
+            IPR1: mmio.Mmio(packed struct(u32) {
+                ///  IPR_N0
+                IPR_N0: u8,
+                ///  IPR_N1
+                IPR_N1: u8,
+                ///  IPR_N2
+                IPR_N2: u8,
+                ///  IPR_N3
+                IPR_N3: u8,
+            }),
+        };
         ///  Selects source APB Master to SPI Master between M4/AP and Fabric
         pub const A1_Regs = extern struct {
             ///  Configuration Control
@@ -1702,108 +1793,49 @@ pub const types = struct {
                 with_32khz_clk = 0x1,
             };
 
-            ///  For Clock 10 (SYNC Up on A0 and AHB Interface of Batching Memory, AUDIO DMA, M4 SRAMs,M4 Bus Matrix and Trace block)
-            CLK_CTRL_A_0: mmio.Mmio(packed struct(u32) {
-                ///  High Speed Clock Divider Ratio. Ratio equals value in register + 2. default div is 6
+            pub const ClockDividerMmio = packed struct(u32) {
                 Clock_Divider_Ratio: u9,
                 ///  Control if the clock divider is on
                 Enable_Clock_Divider: u1,
                 padding: u22 = 0,
-            }),
+            };
+
+            pub const ClockSourceSelection = packed struct(u32) {
+                ///  Select the clock source
+                Clock_Source_Selection: Clock_Source_Selection,
+                padding: u30 = 0,
+            };
+
             ///  For Clock 10 (SYNC Up on A0 and AHB Interface of Batching Memory, AUDIO DMA, M4 SRAMs,M4 Bus Matrix and Trace block)
-            CLK_CTRL_A_1: mmio.Mmio(packed struct(u32) {
-                ///  Select the clock source
-                Clock_Source_Selection: Clock_Source_Selection,
-                padding: u30 = 0,
-            }),
+            CLK_CTRL_A_0: mmio.Mmio(ClockDividerMmio),
+            ///  For Clock 10 (SYNC Up on A0 and AHB Interface of Batching Memory, AUDIO DMA, M4 SRAMs,M4 Bus Matrix and Trace block)
+            CLK_CTRL_A_1: mmio.Mmio(ClockSourceSelection),
             ///  For Clock 2 (FB, A1 (Including CFGSM))
-            CLK_CTRL_B_0: mmio.Mmio(packed struct(u32) {
-                ///  High Speed Clock Divider Ratio. Ratio equals value in register + 2. default div is 6
-                Clock_Divider_Ratio: u9,
-                ///  Control if the clock divider is on
-                Enable_Clock_Divider: u1,
-                padding: u22 = 0,
-            }),
+            CLK_CTRL_B_0: mmio.Mmio(ClockDividerMmio),
             ///  For Clock 2 (FB, A1 (Including CFGSM))
-            CLK_CTRL_B_1: mmio.Mmio(packed struct(u32) {
-                ///  Select the clock source
-                Clock_Source_Selection: Clock_Source_Selection,
-                padding: u30 = 0,
-            }),
+            CLK_CTRL_B_1: mmio.Mmio(ClockSourceSelection),
             ///  For Clock 8 X4 (FFE X4 clk)
-            CLK_CTRL_C_0: mmio.Mmio(packed struct(u32) {
-                ///  High Speed Clock Divider Ratio. Ratio equals value in register + 2. default div is 6
-                Clock_Divider_Ratio: u9,
-                ///  Control if the clock divider is on
-                Enable_Clock_Divider: u1,
-                padding: u22 = 0,
-            }),
+            CLK_CTRL_C_0: mmio.Mmio(ClockDividerMmio),
             ///  For Clock 11 (To M4 peripherals - AHB/APB bridge, UART, WDT and TIMER)
-            CLK_CTRL_D_0: mmio.Mmio(packed struct(u32) {
-                ///  High Speed Clock Divider Ratio. Ratio equals value in register + 2, default div is 16
-                Clock_Divider_Ratio: u9,
-                ///  Control if the clock divider is on
-                Enable_Clock_Divider: u1,
-                padding: u22 = 0,
-            }),
+            CLK_CTRL_D_0: mmio.Mmio(ClockDividerMmio),
             ///  For Clock 12 - Reserved
-            CLK_CTRL_E_0: u32,
+            CLK_CTRL_E_0: mmio.Mmio(ClockDividerMmio),
             ///  For Clock 12
-            CLK_CTRL_E_1: mmio.Mmio(packed struct(u32) {
-                ///  The selected the clock source
-                Clock_Source_Selection: Clock_Source_Selection,
-                padding: u30 = 0,
-            }),
+            CLK_CTRL_E_1: mmio.Mmio(ClockSourceSelection),
             ///  For Clock 16 (FB)
-            CLK_CTRL_F_0: mmio.Mmio(packed struct(u32) {
-                ///  High Speed Clock Divider Ratio. Ratio equals value in register + 2, default div is 16
-                Clock_Divider_Ratio: u9,
-                ///  Control if the clock divider is on
-                Enable_Clock_Divider: u1,
-                padding: u22 = 0,
-            }),
+            CLK_CTRL_F_0: mmio.Mmio(ClockDividerMmio),
             ///  For Clock 16 (FB)
-            CLK_CTRL_F_1: mmio.Mmio(packed struct(u32) {
-                ///  Select the clock source
-                Clock_Source_Selection: Clock_Source_Selection,
-                padding: u30 = 0,
-            }),
+            CLK_CTRL_F_1: mmio.Mmio(ClockSourceSelection),
             ///  For Clock 30 (PDM LEFT/RIGHT clk, I2S Master clk)
-            CLK_CTRL_G_0: mmio.Mmio(packed struct(u32) {
-                ///  High Speed Clock Divider Ratio. Ratio equals value in register + 2, default div is 32
-                Clock_Divider_Ratio: u9,
-                ///  Control if the clock divider is on
-                Enable_Clock_Divider: u1,
-                padding: u22 = 0,
-            }),
+            CLK_CTRL_G_0: mmio.Mmio(ClockDividerMmio),
             ///  For Clock 19 (ADC)
-            CLK_CTRL_H_0: mmio.Mmio(packed struct(u32) {
-                ///  High Speed Clock Divider Ratio. Ratio equals value in register + 2, default div is 16
-                Clock_Divider_Ratio: u9,
-                ///  Control if the clock divider is on
-                Enable_Clock_Divider: u1,
-                padding: u22 = 0,
-            }),
+            CLK_CTRL_H_0: mmio.Mmio(ClockDividerMmio),
             ///  For Clock 19 (ADC)
-            CLK_CTRL_H_1: mmio.Mmio(packed struct(u32) {
-                ///  Select the clock source
-                Clock_Source_Selection: Clock_Source_Selection,
-                padding: u30 = 0,
-            }),
+            CLK_CTRL_H_1: mmio.Mmio(ClockSourceSelection),
             ///  For Clock 21 (FB - additional clk)
-            CLK_CTRL_I_0: mmio.Mmio(packed struct(u32) {
-                ///  High Speed Clock Divider Ratio. Ratio equals value in register + 2, default div is 16
-                Clock_Divider_Ratio: u9,
-                ///  Control if the clock divider is on
-                Enable_Clock_Divider: u1,
-                padding: u22 = 0,
-            }),
+            CLK_CTRL_I_0: mmio.Mmio(ClockDividerMmio),
             ///  For Clock 21 (FB - additional clk)
-            CLK_CTRL_I_1: mmio.Mmio(packed struct(u32) {
-                ///  Select the clock source
-                Clock_Source_Selection: Clock_Source_Selection,
-                padding: u30 = 0,
-            }),
+            CLK_CTRL_I_1: mmio.Mmio(ClockSourceSelection),
             reserved64: [4]u8,
             ///  Gating control for Clock 1
             C01_CLK_GATE: mmio.Mmio(packed struct(u32) {
@@ -1985,13 +2017,7 @@ pub const types = struct {
             }),
             reserved256: [104]u8,
             ///  This Clock is used to delay the Clock gating control signals from PMU. The PMU will monitor the feedback/delayed Clock Gating Control signals to ensure the clocks are OFF before jump to next state. The Firmware needs to Configure this divider to ensure there delay time is longer enough. C23 Clock needs to be 2/3 of the lowest clock frequency of other clocks. For Example, if the Lowest clock frequency of other clocks are 5, then C23 should be lower than 3.33MHz (Or the clock frequency of other clocks should be at least 1.5 times faster than C23.)
-            CLK_CTRL_PMU: mmio.Mmio(packed struct(u32) {
-                ///  High Speed Clock Divider Ratio. Ratio is reg value + 2. default div is 64
-                Clock_Divider_Ratio: u9,
-                ///  1'b1 Clock Divider is ON. 1'b0 Clock Divider is OFF, Output the Source Clock Directly
-                Enable_Clock_Divider: u1,
-                padding: u22 = 0,
-            }),
+            CLK_CTRL_PMU: mmio.Mmio(ClockDividerMmio),
             ///  General reg and SPI ALWAYS ON control
             CRU_GENERAL: mmio.Mmio(packed struct(u32) {
                 ///  Controls wether the SPI clock is always on or not

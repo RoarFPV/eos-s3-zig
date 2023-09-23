@@ -2,14 +2,32 @@ const std = @import("std");
 const microzig = @import("microzig");
 const regs = microzig.chip.peripherals;
 const cm4 = microzig.cpu.peripherals;
+const cpu = microzig.cpu;
 
 pub const uart = @import("hal/uart.zig");
 
 pub const ClockHz = 72_000_000;
 pub const SysTicksPerSecond = 1_000_000;
 
+var systemTicks: u32 = 0;
+
+pub const microzig_options = struct {
+    pub const interrupts = struct {
+        pub fn HardFault() void {
+            @panic("Hard fault");
+        }
+
+        pub fn SysTick() void {
+            cpu.disable_interrupts();
+            systemTicks += 1;
+            cpu.enable_interrupts();
+        }
+    };
+};
+
 // copied from: qorc-sdk\BSP\quickfeather\src\qf_baremetalsetup.c
 pub fn init() void {
+    systemTicks = 0;
     regs.SCB_ACTRL.ACTRL.modify(.{ .DISDEFWBUF = 1 });
 
     // Initialize AIP registers (HSOSC)
@@ -34,14 +52,22 @@ pub fn init() void {
     regs.PMU.M4SRAM_SSW_LPMH_MASK_N.write_raw(0xFFFF);
 
     // Initialize clock registers
-    //regsregs.CRU.CRU.
+    // For Clock 10 (SYNC Up on A0 and AHB Interface of Batching Memory, AUDIO DMA, M4 SRAMs,M4 Bus Matrix and Trace block)
     regs.CRU.CLK_CTRL_A_0.write_raw(0);
-    regs.CRU.CLK_CTRL_B_0.write_raw(0x246);
-    regs.CRU.CLK_CTRL_C_0.write_raw(0x222);
-    regs.CRU.CLK_CTRL_D_0.write_raw(0x222);
-    regs.CRU.CLK_CTRL_F_0.write_raw(0x204);
-    regs.CRU.CLK_CTRL_G_0.write_raw(0x221);
-    regs.CRU.CLK_CTRL_H_0.write_raw(0x3FE);
+
+    //  For Clock 2 (FB, A1 (Including CFGSM))
+    regs.CRU.CLK_CTRL_B_0.write(.{ .Clock_Divider_Ratio = 0x46, .Enable_Clock_Divider = 1 }); //(0x246);
+
+    //  For Clock 8 X4 (FFE X4 clk)
+    regs.CRU.CLK_CTRL_C_0.write(.{ .Clock_Divider_Ratio = 0x22, .Enable_Clock_Divider = 1 }); // 0x222);
+    // For Clock 11 (To M4 peripherals - AHB/APB bridge, UART, WDT and TIMER)
+    regs.CRU.CLK_CTRL_D_0.write(.{ .Clock_Divider_Ratio = 0x22, .Enable_Clock_Divider = 1 }); // 0x222);
+    //  For Clock 16 (FB)
+    regs.CRU.CLK_CTRL_F_0.write(.{ .Clock_Divider_Ratio = 0x04, .Enable_Clock_Divider = 1 }); // 0x204);
+    //  For Clock 30 (PDM LEFT/RIGHT clk, I2S Master clk)
+    regs.CRU.CLK_CTRL_G_0.write(.{ .Clock_Divider_Ratio = 0x21, .Enable_Clock_Divider = 1 }); //0x221);
+    // ADC
+    regs.CRU.CLK_CTRL_H_0.write(.{ .Clock_Divider_Ratio = 0x1FE, .Enable_Clock_Divider = 1 }); // 0x3FE);
     regs.CRU.CLK_CTRL_I_0.write_raw(0x200);
     regs.CRU.C01_CLK_GATE.write_raw(0x011);
     regs.CRU.C02_CLK_GATE.write_raw(0x001);
@@ -73,7 +99,11 @@ pub fn init() void {
 
     cm4.SysTick.LOAD.modify(.{ .RELOAD = ClockHz / SysTicksPerSecond });
     cm4.SysTick.VAL.modify(.{ .CURRENT = 0 });
-    cm4.SysTick.CTRL.modify(.{ .CLKSOURCE = 1, .ENABLE = 1 });
+    cm4.SysTick.CTRL.modify(.{
+        .CLKSOURCE = 1,
+        .TICKINT = 1,
+        .ENABLE = 1,
+    });
 }
 
 pub fn millisToSysTicks(ms: u32) u32 {
@@ -89,20 +119,16 @@ pub fn spinForMillis(ms: u32) void {
 }
 
 pub fn spinForMicros(us: u32) void {
-    var a = us;
+    var a: u32 = 0;
     // systick is micro seconds
-    while (a > 0) {
+    const ticks = systemTicks;
 
-        // wait for 1 second so 1,000,000 ticks
-        while (cm4.SysTick.CTRL.read().COUNTFLAG == 0) {
-            //systickVal = cm4.SysTick.VAL.read();
-            std.mem.doNotOptimizeAway(u32);
-        }
-
-        a -= 1;
+    while (systemTicks - ticks < us) {
+        a += 1;
+        std.mem.doNotOptimizeAway(u32);
     }
 }
 
 pub fn sysTicks() u32 {
-    return cm4.SysTick.VAL.read().CURRENT;
+    return systemTicks;
 }
